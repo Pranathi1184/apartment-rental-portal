@@ -1,0 +1,137 @@
+
+<div class="container mx-auto p-6">
+  <h1 class="text-3xl font-bold mb-6 text-gray-800">Admin Management</h1>
+
+  <!-- Tabs -->
+  <div class="flex border-b border-gray-200 mb-6">
+    <button 
+      (click)="switchTab('admin')"
+      [class.border-b-2]="activeTab === 'admin'"
+      [class.border-blue-500]="activeTab === 'admin'"
+      [class.text-blue-600]="activeTab === 'admin'"
+      class="py-2 px-4 font-medium text-gray-500 hover:text-blue-600 focus:outline-none">
+      Manage Admins
+    </button>
+    <button 
+      (click)="switchTab('helper')"
+      [class.border-b-2]="activeTab === 'helper'"
+      [class.border-blue-500]="activeTab === 'helper'"
+      [class.text-blue-600]="activeTab === 'helper'"
+      class="py-2 px-4 font-medium text-gray-500 hover:text-blue-600 focus:outline-none">
+      Manage Helpers
+    </button>
+    <button 
+      (click)="switchTab('list')"
+      [class.border-b-2]="activeTab === 'list'"
+      [class.border-blue-500]="activeTab === 'list'"
+      [class.text-blue-600]="activeTab === 'list'"
+      class="py-2 px-4 font-medium text-gray-500 hover:text-blue-600 focus:outline-none">
+      Existing Users
+    </button>
+  </div>
+
+  <!-- Messages -->
+  <div *ngIf="successMessage" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+    {{ successMessage }}
+  </div>
+  <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Admin Form -->
+  <div *ngIf="activeTab === 'admin'" class="bg-white shadow rounded-lg p-6">
+    <h2 class="text-xl font-semibold mb-4">Create New Admin/User</h2>
+    <form [formGroup]="adminForm" (ngSubmit)="createAdmin()">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-gray-700 text-sm font-bold mb-2">First Name</label>
+          <input formControlName="first_name" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+        <div>
+          <label class="block text-gray-700 text-sm font-bold mb-2">Last Name</label>
+          <input formControlName="last_name" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+        <div>
+          <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+          <input formControlName="email" type="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+        <div>
+          <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+          <input formControlName="password" type="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+        <div>
+          <label class="block text-gray-700 text-sm font-bold mb-2">Role</label>
+          <select formControlName="role" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white">
+            <option *ngIf="authService.isSuperAdmin()" value="Admin">Admin</option>
+            <option value="Resident">Resident</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-gray-700 text-sm font-bold mb-2">Phone</label>
+          <input formControlName="phone" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+      </div>
+      <div class="mt-6">
+        <button type="submit" [disabled]="adminForm.invalid" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:opacity-50">
+          Create User
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Helper Form -->
+  <div *ngIf="activeTab === 'helper'" class="bg-white shadow rounded-lg p-6">
+    <h2 class="text-xl font-semibold mb-4">Add New Helper (Service Provider)</h2>
+    <form [formGroup]="helperForm" (ngSubmit)="createHelper()">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-gray-700 text-sm font-bold mb-2">Full Name</label>
+          <input formControlName="name" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+        <div>
+          <label class="block text-gray-700 text-sm font-bold mb-2">Service Type</label>
+          <select formControlName="service_type" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white">
+            <option value="Maid">Maid</option>
+            <option value="Cook">Cook</option>
+            <option value="Driver">Driver</option>
+            <option value="Cleaner">Cleaner</option>
+            <option value="Plumber">Plumber</option>
+            <option value="Electrician">Electrician</option>
+            <option value="Carpenter">Carpenter</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-gray-700 text-sm font-bold mb-2">Phone Number</label>
+          <input formControlName="phone_number" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+        <div>
+          <label class="block text-gray-700 text-sm font-bold mb-2">Availability</label>
+          <input formControlName="availability" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+      </div>
+      <div class="mt-6">
+        <button type="submit" [disabled]="helperForm.invalid" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:opacity-50">
+          Add Helper
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- User List -->
+  <div *ngIf="activeTab === 'list'" class="bg-white shadow rounded-lg p-6">
+    <h2 class="text-xl font-semibold mb-4">Existing Users</h2>
+    <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2">Select User</label>
+        <select [(ngModel)]="selectedUserId" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white">
+            <option value="" disabled selected>Select a user...</option>
+            <option *ngFor="let user of users" [value]="user.id">
+                {{ user.first_name }} {{ user.last_name }} ({{ user.role }}) - {{ user.email }}
+            </option>
+        </select>
+    </div>
+    <div *ngIf="selectedUserId" class="p-4 bg-gray-50 rounded">
+        <p class="text-sm text-gray-600">Selected User ID: {{ selectedUserId }}</p>
+        <!-- Placeholder for future actions like Edit/Delete -->
+    </div>
+  </div>
+</div>

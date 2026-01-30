@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    container_name: rental_backend
+    ports:
+      - "5001:5000"
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/rental_db
+      - JWT_SECRET_KEY=dev-secret-key
+    # The 'service_healthy' condition ensures the DB is ready before backend starts
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - rental_network
+    volumes:
+      - ./backend:/app
+
+  frontend:
+    build: ./frontend
+    container_name: rental_frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - rental_network
+
+  db:
+    image: postgres:15-alpine
+    container_name: rental_db
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=rental_db
+    ports:
+      - "5433:5432"
+    # This health check periodically pings the DB
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d rental_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - rental_network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+networks:
+  rental_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
