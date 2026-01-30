@@ -1,7 +1,7 @@
-# Apartment Rental Portal v2
+# Apartment Rental Portal 
 
 ## 🏢 Project Overview
-**Apartment Rental Portal v2** is a modern, full-stack web application designed to streamline apartment complex management. It facilitates interaction between residents, administrators, and service providers (helpers).
+**Apartment Rental Portal** is a modern, full-stack web application designed to streamline apartment complex management. It facilitates interaction between residents, administrators, and service providers (helpers).
 
 ### Key Features
 *   **User Management**: Role-Based Access Control (RBAC) for Residents, Admins, and Super Admins.
@@ -153,15 +153,10 @@ python seed.py
 
 ---
 
-## 🧪 Testing
-To run the backend test suite:
-```bash
-cd backend
-python -m pytest
-```
+## ☁️ Cloud Deployment
 
-To run frontend unit tests:
-```bash
-cd frontend
-ng test
-```
+The application is ready for deployment on modern cloud platforms using the root `Dockerfile`.
+
+*   **Render**: [Deploy to Render](https://render.com)
+*   **Railway**: [Deploy to Railway](https://railway.app)
+

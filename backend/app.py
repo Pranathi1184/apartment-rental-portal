@@ -8,7 +8,7 @@ from admin_routes import admin_bp
 import models 
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder='static', static_url_path='/')
     app.config.from_object(Config)
 
     # Initialize extensions
@@ -23,6 +23,14 @@ def create_app():
     app.register_blueprint(admin_bp, url_prefix='/api/admin')
 
     @app.route('/')
+    def index():
+        return app.send_static_file('index.html')
+
+    @app.errorhandler(404)
+    def not_found(e):
+        return app.send_static_file('index.html')
+
+    @app.route('/health')
     def health_check():
         return {"status": "healthy"}, 200
 
